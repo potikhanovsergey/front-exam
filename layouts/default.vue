@@ -7,7 +7,8 @@
       fixed
       app
     >
-      <v-list>
+
+      <v-list> 
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -23,6 +24,66 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <!-- <v-list v-if="leftWidget">
+        <v-list-item
+        v-for="(item, i) in Object.keys(leftWidget)"
+        :key="i"
+        >
+        <v-list-item-action>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title v-text="item" />
+        </v-list-item-content>
+        </v-list-item>
+      </v-list> -->
+
+    <v-card
+    v-if="leftWidget"
+    class="mx-auto"
+    max-width="500"
+    >
+    <v-list shaped>
+      <v-list-item-group
+        multiple
+      >
+        <template v-for="(item, i) in Object.keys(leftWidget)">
+          <v-divider
+            v-if="!item"
+            :key="`divider-${i}`"
+          ></v-divider>
+
+          <v-list-item
+            v-else
+            :key="`item-${i}`"
+            :value="item"
+            :to="{name: 'animals-type', params: {type: item}}"
+            active-class="deep-purple--text text--accent-4"
+          >
+            <template>
+              <v-list-item-content>
+                <v-list-item-title class="animal">
+                  <v-img
+                  class="animal__img"
+                  :src="require(`~/assets/img/${item.slice(0, -1)}_img.jpg`)"
+                  height="20px"
+                  width="20px"
+                  max-width="20px"
+                  ></v-img>
+                  {{ item }}
+                </v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action>
+                <v-list-item-title v-text="leftWidget[item]"></v-list-item-title>
+              </v-list-item-action>
+            </template>
+          </v-list-item>
+        </template>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+
     </v-navigation-drawer>
     <v-app-bar
       :clipped-left="clipped"
@@ -49,36 +110,12 @@
         <v-icon>mdi-minus</v-icon>
       </v-btn>
       <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
         <Nuxt />
       </v-container>
     </v-main>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
     <v-footer
       :absolute="!fixed"
       app
@@ -89,6 +126,8 @@
 </template>
 
 <script>
+
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'DefaultLayout',
   data () {
@@ -99,20 +138,52 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Главная',
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
+          icon: 'mdi-help-circle',
+          title: 'О нас',
+          to: '/about'
+        },
       ],
       miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Фермерский роддом. Потиханов 201-327 Экзамен'
     }
+  },
+  computed: {
+    ...mapGetters({ // todo убрать лишние геттеры 
+      homePage: 'getHomePage',
+      aboutPage: 'getAboutPage',
+      leftWidget: 'getLeftWidget',
+      babies: 'getBabies',
+      formData: 'getFormData'
+    })
+  },
+  methods: {
+    ...mapActions([
+      'fetchHomePage',
+      'fetchAboutPage',
+      'fetchLeftWidget',
+      'fetchBabies',
+      'fetchFormData'
+    ])
+  },
+  created() {
+    this.fetchHomePage && this.fetchHomePage();
+    this.fetchAboutPage && this.fetchAboutPage();
+    this.fetchLeftWidget && this.fetchLeftWidget();
+    this.fetchBabies && this.fetchBabies();
+    this.fetchFormData && this.fetchFormData();
   }
 }
 </script>
+
+<style scoped>
+  .animal {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+</style>
