@@ -19,6 +19,11 @@ export default {
     ]
   },
 
+  generate: {
+    fallback: true
+  },
+  target: 'static',
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],

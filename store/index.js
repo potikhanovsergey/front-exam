@@ -50,7 +50,6 @@ export const actions = {
         commit('SET_FORM_DATA', response); 
     },
     async addAnimal({ commit, dispatch }, data) {
-        console.log(data);
         const response = await this.$axios.$post(`${BASE_URL}/api/farm/baby`, data);
         if (response === 1) {
             dispatch('fetchBabies');

@@ -53,14 +53,6 @@
       valid: true,
       form: {},
       formData: {},
-    //   nameRules: [
-    //     v => !!v || 'Name is required',
-    //     v => (v && v.length <= 10) || 'Name must be less than 10 characters',
-    //   ],
-    //   emailRules: [
-    //     v => !!v || 'E-mail is required',
-    //     v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-    //   ],
     }),
 
     methods: {
@@ -70,8 +62,8 @@
       add() {
           this.valid = this.$refs.form.validate();
           if (this.valid) {
-              this.reset();
               this.$emit('form-submit', this.formData);
+                this.reset();
           }
       }
     },
