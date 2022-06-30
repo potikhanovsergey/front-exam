@@ -37,7 +37,7 @@
         </v-list-item-content>
         </v-list-item>
       </v-list> -->
-
+<!-- 
     <v-card
     v-if="leftWidget"
     class="mx-auto"
@@ -82,7 +82,7 @@
         </template>
       </v-list-item-group>
     </v-list>
-  </v-card>
+  </v-card> -->
 
     </v-navigation-drawer>
     <v-app-bar
@@ -102,12 +102,6 @@
         @click.stop="clipped = !clipped"
       >
         <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
       </v-btn>
       <v-toolbar-title v-text="title" />
     </v-app-bar>
@@ -142,13 +136,27 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-help-circle',
+          icon: 'mdi-account-group',
           title: 'О нас',
           to: '/about'
         },
-      ],
+        {
+          icon: 'mdi-hand-heart',
+          title: 'Услуги',
+          to: '/services'
+        },
+        {
+          icon: 'mdi-post',
+          title: 'Блог',
+          to: '/blog'
+        },
+        {
+          icon: 'mdi-cellphone',
+          title: 'Контакты',
+          to: '/contacts'
+        },      ],
       miniVariant: false,
-      title: 'Фермерский роддом. Потиханов 201-327 Экзамен'
+      title: 'Салон красоты Beauty. Потиханов 201-327 Экзамен'
     }
   },
   computed: {
@@ -166,15 +174,17 @@ export default {
       'fetchAboutPage',
       'fetchLeftWidget',
       'fetchBabies',
-      'fetchFormData'
+      'fetchFormData',
+      'fetchPosts'
     ])
   },
   created() {
-    this.fetchHomePage && this.fetchHomePage();
-    this.fetchAboutPage && this.fetchAboutPage();
-    this.fetchLeftWidget && this.fetchLeftWidget();
-    this.fetchBabies && this.fetchBabies();
-    this.fetchFormData && this.fetchFormData();
+    // this.fetchHomePage && this.fetchHomePage();
+    // this.fetchAboutPage && this.fetchAboutPage();
+    // this.fetchLeftWidget && this.fetchLeftWidget();
+    // this.fetchBabies && this.fetchBabies();
+    // this.fetchFormData && this.fetchFormData();
+    // this.fetchPosts && this.fetchPosts({page: 1});
   }
 }
 </script>

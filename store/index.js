@@ -5,7 +5,9 @@ export const state = () => ({
     aboutPage: null,
     leftWidget: null,
     babies: null,
-    formData: null
+    formData: null,
+    posts: [],
+    page: 1,
 })
 
 
@@ -25,6 +27,15 @@ export const mutations = {
     SET_FORM_DATA(state, payload) {
         state.formData = payload;
     },
+    SET_POSTS(state, payload) {
+      console.log(payload);
+      if (payload?.data) {
+        state.posts = payload.data;
+      }
+    },
+    SET_POSTS_PAGINATION(state, payload) {
+      state.page = payload.page;
+    }
 }
 
 export const actions = {
@@ -55,6 +66,17 @@ export const actions = {
             dispatch('fetchBabies');
             dispatch('fetchLeftWidget');
         }
+    },
+    setPostsPagination({ commit }, data) {
+      commit('SET_POSTS_PAGINATION', data);
+    },
+    async fetchPosts({ commit, dispatch, }, data) {
+      console.log(data);
+      const response = await this.$axios.get(`/api/posts/`);
+      if (response) {
+        dispatch('setPostsPagination', {page: data.page});
+        commit('SET_POSTS', response);
+      }
     }
 }
 
@@ -78,5 +100,11 @@ export const getters = {
         const filtered = state.babies?.filter(baby => baby.type === type);
         return filtered;
     },
+    getPosts(state) {
+      return state.posts;
+    },
+    getPaginationPage(state) {
+      return state.page;
+    }
 
 }
