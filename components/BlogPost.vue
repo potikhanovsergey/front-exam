@@ -42,6 +42,7 @@
         color="deep-purple lighten-2"
         text
         block
+        :to="{ name: 'blog-id', params: { id } }"
       >
         Читать
       </v-btn>
@@ -51,7 +52,7 @@
 
 <script>
   export default {
-    props: ["img", "author", "date", "desc", "title"],
+    props: ["img", "author", "date", "desc", "title", "id"],
     data: () => ({
       selection: 1,
     }),
