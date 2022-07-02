@@ -50,6 +50,7 @@
                       dark
                       x-small
                       color="orange"
+                      @click="openEditCommentModal(comment)"
                     >
                       <v-icon dark>
                         mdi-pen
@@ -61,6 +62,7 @@
                       dark
                       x-small
                       color="error"
+                      @click="handleDeleteComment(comment.id)"
                     >
                       <v-icon dark>
                         mdi-delete
@@ -70,7 +72,23 @@
                 </v-row>
               </v-sheet>  
             </template>
-          <comment-form @new-comment="handleNewComment" />
+            <v-btn
+              color="primary"
+              class="mt-9"
+              dark
+              @click="openNewCommentModal"
+            >
+              Оставить комментариий
+            </v-btn>
+            <comment-modal
+              v-if="commentModal.visible"
+              :dialog="commentModal.visible" 
+              :type="commentModal.type" 
+              @new-comment="handleNewComment"
+              @edit-comment="handleEditComment"
+              @close="commentModal.visible = false"
+              :propComment="commentModal.comment"
+            />
         </div>
       </div>
       </v-col>
@@ -86,7 +104,13 @@ export default {
     return {
       post: null,
       errorOnFetch: null,
+      errorOnAddComment: null,
       comments: [],
+      commentModal: {
+        type: 'create',
+        visible: false,
+        comment: null
+      },
     }
   },
   computed: {
@@ -98,21 +122,51 @@ export default {
     ...mapActions({
       fetchPost: 'fetchPost',
       fetchPostComments: 'fetchPostComments',
-      postComment: 'postComment'
+      postComment: 'postComment',
+      deleteComment: 'deleteComment',
+      editComment: 'editComment',
     }),
-    handleNewComment({comment}) {
-      this.postComment({
+    async handleNewComment({comment}) {
+      const response = await this.postComment({
         comment,
         post: this.$route.params.id,
         user: this.uuid || "Аноним"
       });
-      this.comments.push({
-        message: comment,
-        post: this.$route.params.id,
-        user: "Аноним",
-        user_id: this.uuid,
-        id: new Date().toISOString(),
-      })
+      if (response.status === 200) {
+        this.comments.push({
+          message: comment,
+          post: this.$route.params.id,
+          user: "Аноним",
+          user_id: this.uuid,
+          id: response.data,
+        });
+        this.errorOnAddComment = null;
+        this.commentModal.visible = false;
+      } else {
+        this.errorOnAddComment = "Что то пошло не так, попробуйте добавить комментарий снова"
+      }
+    },
+    async handleEditComment({ comment, id }) {
+      console.log(comment, id);
+      const response = await this.editComment({ comment, id, post: this.$route.params.id });
+      if (response.status === 200) {
+        this.comments.find(c => c.id === id).message = comment;
+      }
+      this.commentModal.visible = false;
+    },
+    async handleDeleteComment(id) {
+      const response = await this.deleteComment({id});
+      console.log(response);
+      this.comments = this.comments.filter(comment => comment.id !== id);
+    },
+    openNewCommentModal() {
+      this.commentModal.type = 'create';
+      this.commentModal.visible = true;
+    },
+    openEditCommentModal(comment) {
+      this.commentModal.type = 'edit';
+      this.commentModal.visible = true;
+      this.commentModal.comment = comment;
     }
   },
   async created() {
@@ -122,6 +176,7 @@ export default {
       const commentsResponse = await this.fetchPostComments({ id: this.$route.params.id })
       if (commentsResponse.status === 200) {
         this.comments = commentsResponse.data;
+        this.errorOnFetch = null;
       }
     } else {
       this.errorOnFetch = "Не получилось найти пост с таким id. Перезагрузите страницу, или попробуйте найти другой пост."

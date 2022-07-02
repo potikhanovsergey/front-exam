@@ -54,6 +54,17 @@ export const actions = {
     async generateUuid({ commit }) {
       const id = uuid.v1();
       commit('SET_UUID', {id});
+    },
+    async deleteComment({ commit, dispatch }, { id }) {
+      const response = await this.$axios.delete(`api/comments/${id}/`);
+      return response;
+    },
+    async editComment({ commit, dispatch }, { comment, id, post }) {
+      const response = await this.$axios.put(`api/comments/${id}/`, {
+        message: comment,
+        post
+      });
+      return response;
     }
   }
 

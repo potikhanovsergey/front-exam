@@ -1,22 +1,15 @@
 <template>
   <div class="mt-8">
     <v-dialog
-      v-model="dialog"
+      @click:outside="$emit('close')"
+      @keydown.esc="$emit('close')"
+      :value="dialog"
       max-width="600px"
     >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="primary"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-          Оставить комментариий
-        </v-btn>
-      </template>
       <v-card>
         <v-card-title>
-          <span class="text-h5">Ваш комментарий</span>
+          <span class="text-h5" v-if="type === 'create'">Новый комментарий</span>
+          <span class="text-h5" v-if="type === 'edit'">Редактировать комментарий</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -40,7 +33,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            @click="$emit('close')"
           >
             Закрыть
           </v-btn>
@@ -49,7 +42,7 @@
             text
             @click="sendComment"
           >
-            Отправить
+            Сохранить
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -59,21 +52,32 @@
 
 <script>
 export default {
-    data() {
-        return {
-            comment: '',
-            dialog: false,
-        }
-    },
-    methods: {
-      sendComment() {
+  props: ['type', 'propComment', 'dialog'],
+  data() {
+      return {
+          comment: '',
+      }
+  },
+  methods: {
+    sendComment() {
+      if (this.type === 'create') {
         this.$emit('new-comment', {
           comment: this.comment
         });
-        this.comment = '';
-        this.dialog = false;
+      } else if (this.type === 'edit') {
+        this.$emit('edit-comment', {
+          comment: this.comment,
+          id: this.propComment.id
+        })
       }
-    },
+      this.comment = '';
+    }
+  },
+  created() {
+    if (this.type === 'edit') {
+      this.comment = this.propComment.message;
+    }
+  }
 }
 </script>
 
