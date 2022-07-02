@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <h1>О нас</h1>
-        <v-img src="http://localhost:8000/static/pages/img/salon-1.jpg" :style="{borderRadius: '12px'}" lazy-src="https://picsum.photos/id/11/10/6" />
+        <v-img src="http://potikhanovsergey.pythonanywhere.com/static/pages/img/salon-1.jpg" :style="{borderRadius: '12px'}" lazy-src="https://picsum.photos/id/11/10/6" />
       </v-col>
       <v-col md="9">
         <p class="text-h5">

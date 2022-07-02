@@ -79,11 +79,8 @@ export default {
   },
   proxy: {
     '/api/': { 
-      target: `${process.env.API_URL}/api/`, 
+      target: `http://potikhanovsergey.pythonanywhere.com/api/`, 
       pathRewrite: { '^/api/': '' } 
     }
   },
-  env: {
-    apiUrl: process.env.API_URL || 'http://localhost:3000'
-  }
 }
