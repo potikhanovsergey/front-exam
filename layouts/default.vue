@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import { uuid } from 'vue-uuid';
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'DefaultLayout',
@@ -74,24 +73,14 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-apps',
-          title: 'Главная',
+          icon: 'mdi-post',
+          title: 'Блог',
           to: '/'
         },
         {
           icon: 'mdi-account-group',
           title: 'О нас',
           to: '/about'
-        },
-        {
-          icon: 'mdi-hand-heart',
-          title: 'Услуги',
-          to: '/services'
-        },
-        {
-          icon: 'mdi-post',
-          title: 'Блог',
-          to: '/blog'
         },
         {
           icon: 'mdi-cellphone',
@@ -103,7 +92,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ // todo убрать лишние геттеры 
+    ...mapGetters({ 
       userUuid: 'getUserUuid',
     })
   },

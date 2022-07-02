@@ -19,7 +19,7 @@
       <div class="post__comments">
         <h2>Комментарии ({{ comments.length }})</h2>
         <p :style="{ maxWidth: '666px' }">Комментарии анонимны для других пользователей, однакого для Вас Вы выделены цветом и жирным шрифтом за счет уникального айди. <br />
-        Вы можете редактировать и удалять свои комментарии</p>
+        Вы можете редактировать и удалять свои комментарии.</p>
         <div>
             <template v-for="(comment) in comments">
               <v-sheet 
@@ -27,9 +27,9 @@
               :key="comment.id">
                 <v-row>
                   <v-col cols="11">
-                    <v-list-item
+                    <v-list-item class="align-start"
                     >
-                      <v-list-item-avatar>
+                      <v-list-item-avatar class="align-self-start mt-3">
                           <v-img :src="`https://eu.ui-avatars.com/api/?name=${comment.user}`"></v-img>
                       </v-list-item-avatar>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-8">
+  <v-form class="mt-8" @submit.prevent v-model="isFormValid">
     <v-dialog
       @click:outside="$emit('close')"
       @keydown.esc="$emit('close')"
@@ -19,7 +19,9 @@
               >
                 <v-textarea
                   filled
+                  required
                   v-model="comment"
+                  :rules="rules"
                   label="Комментарий"
                   no-resize
                   rows="3"
@@ -40,6 +42,7 @@
           <v-btn
             color="blue darken-1"
             text
+            :disabled="!isFormValid"
             @click="sendComment"
           >
             Сохранить
@@ -47,7 +50,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div>
+  </v-form>
 </template>
 
 <script>
@@ -55,8 +58,21 @@ export default {
   props: ['type', 'propComment', 'dialog'],
   data() {
       return {
-          comment: '',
+        isFormValid: true,
+        comment: '',
+        createRules: [
+          v => !!v || 'Это поле обязательно',
+        ],
+        editRules: [
+          v => !!v || 'Это поле обязательно',
+          v => (v && v !== this.propComment.message) || 'Новый комментарий не должен совпадать с редактируемым',
+        ]
       }
+  },
+  computed: {
+    rules() {
+      return this.type === 'create' ? this.createRules : this.editRules;
+    }
   },
   methods: {
     sendComment() {
