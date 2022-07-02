@@ -8,8 +8,8 @@
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5" v-if="type === 'create'">Новый комментарий</span>
-          <span class="text-h5" v-if="type === 'edit'">Редактировать комментарий</span>
+          <span class="text-h5" v-if="commentModal.type === 'create'">Новый комментарий</span>
+          <span class="text-h5" v-if="commentModal.type === 'edit'">Редактировать комментарий</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -55,7 +55,7 @@
 
 <script>
 export default {
-  props: ['type', 'propComment', 'dialog'],
+  props: ['commentModal', 'dialog'],
   data() {
       return {
         isFormValid: true,
@@ -65,34 +65,35 @@ export default {
         ],
         editRules: [
           v => !!v || 'Это поле обязательно',
-          v => (v && v !== this.propComment.message) || 'Новый комментарий не должен совпадать с редактируемым',
+          v => (v && v !== this.commentModal?.comment?.message) || 'Новый комментарий не должен совпадать с редактируемым',
         ]
       }
   },
   computed: {
     rules() {
-      return this.type === 'create' ? this.createRules : this.editRules;
+      return this.commentModal.type === 'create' ? this.createRules : this.editRules;
     }
   },
   methods: {
     sendComment() {
-      if (this.type === 'create') {
+      if (this.commentModal.type === 'create') {
         this.$emit('new-comment', {
           comment: this.comment
         });
-      } else if (this.type === 'edit') {
+      } else if (this.commentModal.type === 'edit') {
         this.$emit('edit-comment', {
           comment: this.comment,
-          id: this.propComment.id
+          id: this.commentModal.comment.id
         })
       }
     }
   },
   mounted() {
-    if (this.type === 'edit') {
-      this.comment = this.propComment.message;
+    if (this.commentModal.type === 'edit') {
+      console.log(this.commentModal);
+      this.comment = this.commentModal?.comment?.message;
     }
-  }
+  },
 }
 </script>
 

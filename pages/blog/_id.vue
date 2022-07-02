@@ -81,12 +81,12 @@
               Оставить комментариий
             </v-btn>
             <comment-modal
+              v-if="commentModal.visible"
               :dialog="commentModal.visible" 
-              :type="commentModal.type" 
               @new-comment="handleNewComment"
               @edit-comment="handleEditComment"
               @close="commentModal.visible = false"
-              :propComment="commentModal.comment"
+              :commentModal="commentModal"
             />
         </div>
       </div>
@@ -115,7 +115,10 @@ export default {
   computed: {
     ...mapGetters({
       uuid: 'getUserUuid',
-    })
+    }),
+    modalPropComment() {
+      return this.commentModal.comment;
+    }
   },
   methods: {
     ...mapActions({
@@ -162,8 +165,8 @@ export default {
     },
     openEditCommentModal(comment) {
       this.commentModal.type = 'edit';
-      this.commentModal.visible = true;
       this.commentModal.comment = comment;
+      this.commentModal.visible = true;
     }
   },
   async created() {

@@ -21,6 +21,7 @@ export const mutations = {
     },
     SET_UUID(state, payload) {
       state.userUuid = payload.id;
+      localStorage.setItem('userUuid', payload.id);
     }
 }
 

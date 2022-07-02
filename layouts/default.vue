@@ -102,6 +102,7 @@ export default {
     })
   },
   mounted() {
+    console.log(localStorage, localStorage.userUuid);
     if (!localStorage.userUuid) {
       this.generateUuid();
     } else {
