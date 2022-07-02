@@ -25,65 +25,6 @@
         </v-list-item>
       </v-list>
 
-      <!-- <v-list v-if="leftWidget">
-        <v-list-item
-        v-for="(item, i) in Object.keys(leftWidget)"
-        :key="i"
-        >
-        <v-list-item-action>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title v-text="item" />
-        </v-list-item-content>
-        </v-list-item>
-      </v-list> -->
-<!-- 
-    <v-card
-    v-if="leftWidget"
-    class="mx-auto"
-    max-width="500"
-    >
-    <v-list shaped>
-      <v-list-item-group
-        multiple
-      >
-        <template v-for="(item, i) in Object.keys(leftWidget)">
-          <v-divider
-            v-if="!item"
-            :key="`divider-${i}`"
-          ></v-divider>
-
-          <v-list-item
-            v-else
-            :key="`item-${i}`"
-            :value="item"
-            :to="{name: 'animals-type', params: {type: item}}"
-            active-class="deep-purple--text text--accent-4"
-          >
-            <template>
-              <v-list-item-content>
-                <v-list-item-title class="animal">
-                  <v-img
-                  class="animal__img"
-                  :src="require(`~/assets/img/${item.slice(0, -1)}_img.jpg`)"
-                  height="20px"
-                  width="20px"
-                  max-width="20px"
-                  ></v-img>
-                  {{ item }}
-                </v-list-item-title>
-              </v-list-item-content>
-
-              <v-list-item-action>
-                <v-list-item-title v-text="leftWidget[item]"></v-list-item-title>
-              </v-list-item-action>
-            </template>
-          </v-list-item>
-        </template>
-      </v-list-item-group>
-    </v-list>
-  </v-card> -->
-
     </v-navigation-drawer>
     <v-app-bar
       :clipped-left="clipped"
@@ -103,7 +44,9 @@
       >
         <v-icon>mdi-application</v-icon>
       </v-btn>
-      <v-toolbar-title v-text="title" />
+      <v-row justify="space-between" align="center" class="px-5">
+        <v-toolbar-title v-text="title" />
+      </v-row>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -111,7 +54,7 @@
       </v-container>
     </v-main>
     <v-footer
-      :absolute="!fixed"
+      fixed
       app
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -120,7 +63,7 @@
 </template>
 
 <script>
-
+import { uuid } from 'vue-uuid';
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'DefaultLayout',
@@ -161,30 +104,20 @@ export default {
   },
   computed: {
     ...mapGetters({ // todo убрать лишние геттеры 
-      homePage: 'getHomePage',
-      aboutPage: 'getAboutPage',
-      leftWidget: 'getLeftWidget',
-      babies: 'getBabies',
-      formData: 'getFormData'
+      userUuid: 'getUserUuid',
     })
   },
   methods: {
-    ...mapActions([
-      'fetchHomePage',
-      'fetchAboutPage',
-      'fetchLeftWidget',
-      'fetchBabies',
-      'fetchFormData',
-      'fetchPosts'
-    ])
+    ...mapActions({
+      generateUuid: 'generateUuid',
+    })
   },
-  created() {
-    // this.fetchHomePage && this.fetchHomePage();
-    // this.fetchAboutPage && this.fetchAboutPage();
-    // this.fetchLeftWidget && this.fetchLeftWidget();
-    // this.fetchBabies && this.fetchBabies();
-    // this.fetchFormData && this.fetchFormData();
-    // this.fetchPosts && this.fetchPosts({page: 1});
+  mounted() {
+    if (!localStorage.userUuid) {
+      this.generateUuid();
+    } else {
+      this.$store.commit('SET_UUID', {id: localStorage.userUuid})
+    }
   }
 }
 </script>

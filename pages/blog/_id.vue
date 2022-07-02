@@ -18,23 +18,60 @@
       </p>
       <div class="post__comments">
         <h2>Комментарии ({{ comments.length }})</h2>
-        <v-list three-line class="pl-3">
+        <p :style="{ maxWidth: '666px' }">Комментарии анонимны для других пользователей, однакого для Вас Вы выделены цветом и жирным шрифтом за счет уникального айди. <br />
+        Вы можете редактировать и удалять свои комментарии</p>
+        <div>
             <template v-for="(comment) in comments">
-              <v-list-item
-              :key="comment.id"
-              >
-              <v-list-item-avatar>
-                  <v-img :src="`https://eu.ui-avatars.com/api/?name=${comment.user}`"></v-img>
-              </v-list-item-avatar>
+              <v-sheet 
+              class="grey darken-3 mt-9"
+              :key="comment.id">
+                <v-row>
+                  <v-col cols="11">
+                    <v-list-item
+                    >
+                      <v-list-item-avatar>
+                          <v-img :src="`https://eu.ui-avatars.com/api/?name=${comment.user}`"></v-img>
+                      </v-list-item-avatar>
 
-              <v-list-item-content>
-                  <v-list-item-title v-html="comment.user"></v-list-item-title>
-                  <p>{{ comment.message }}</p>
-              </v-list-item-content>
-              </v-list-item>
-          </template>
+                      <v-list-item-content>
+                          <v-list-item-title v-html="comment.user" 
+                          :style="{ 
+                            fontWeight: uuid === comment.user_id ? 'bold' : 'regular',
+                            color: uuid === comment.user_id ? '#facafa' : '#fff'
+                          }"></v-list-item-title>
+                          <p>{{ comment.message }}</p>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-col>
+                  <v-col cols="1" v-if="uuid === comment.user_id">
+                    <v-btn
+                      class="mx-2 mb-4"
+                      fab
+                      dark
+                      x-small
+                      color="orange"
+                    >
+                      <v-icon dark>
+                        mdi-pen
+                      </v-icon>
+                    </v-btn>
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      dark
+                      x-small
+                      color="error"
+                    >
+                      <v-icon dark>
+                        mdi-delete
+                      </v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-sheet>  
+            </template>
           <comment-form @new-comment="handleNewComment" />
-        </v-list>
+        </div>
       </div>
       </v-col>
     </v-row>
@@ -49,21 +86,33 @@ export default {
     return {
       post: null,
       errorOnFetch: null,
-      comments: []
+      comments: [],
     }
   },
   computed: {
     ...mapGetters({
-      page: 'getHomePage',
+      uuid: 'getUserUuid',
     })
   },
   methods: {
     ...mapActions({
       fetchPost: 'fetchPost',
-      fetchPostComments: 'fetchPostComments'
+      fetchPostComments: 'fetchPostComments',
+      postComment: 'postComment'
     }),
-    handleNewComment(comment) {
-
+    handleNewComment({comment}) {
+      this.postComment({
+        comment,
+        post: this.$route.params.id,
+        user: this.uuid || "Аноним"
+      });
+      this.comments.push({
+        message: comment,
+        post: this.$route.params.id,
+        user: "Аноним",
+        user_id: this.uuid,
+        id: new Date().toISOString(),
+      })
     }
   },
   async created() {
