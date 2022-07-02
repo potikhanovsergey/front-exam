@@ -11,7 +11,6 @@ export const state = () => ({
 
 export const mutations = {
     SET_POSTS(state, payload) {
-      console.log(payload);
       if (payload?.data) {
         state.posts = payload.data;
       }
@@ -44,7 +43,7 @@ export const actions = {
       return response;
     },
     async postComment({ commit, dispatch }, { comment, post, user }) {
-      const response = await this.$axios.post(`api/posts/${post}/new_comment/`, {
+      const response = await this.$axios.post(`/api/posts/${post}/new_comment/`, {
         message: comment,
         post: +post,
         user_id: user
@@ -56,11 +55,11 @@ export const actions = {
       commit('SET_UUID', {id});
     },
     async deleteComment({ commit, dispatch }, { id }) {
-      const response = await this.$axios.delete(`api/comments/${id}/`);
+      const response = await this.$axios.delete(`/api/comments/${id}/`);
       return response;
     },
     async editComment({ commit, dispatch }, { comment, id, post }) {
-      const response = await this.$axios.put(`api/comments/${id}/`, {
+      const response = await this.$axios.put(`/api/comments/${id}/`, {
         message: comment,
         post
       });

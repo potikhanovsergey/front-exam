@@ -74,12 +74,16 @@ export default {
   //   baseUrl: 'http://localhost:8000/api',
   // }
   axios: {
-    proxy: true
+    proxy: true,
+    baseURL: process.env.apiUrl,
   },
   proxy: {
     '/api/': { 
-      target: 'http://localhost:8000/api', 
+      target: `${process.env.API_URL}/api/`, 
       pathRewrite: { '^/api/': '' } 
     }
   },
+  env: {
+    apiUrl: process.env.API_URL || 'http://localhost:3000'
+  }
 }

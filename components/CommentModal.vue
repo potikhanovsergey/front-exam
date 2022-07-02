@@ -1,5 +1,5 @@
 <template>
-  <v-form class="mt-8" @submit.prevent v-model="isFormValid">
+  <v-form class="mt-8" @submit.prevent v-model="isFormValid" v-if="dialog">
     <v-dialog
       @click:outside="$emit('close')"
       @keydown.esc="$emit('close')"
@@ -86,10 +86,9 @@ export default {
           id: this.propComment.id
         })
       }
-      this.comment = '';
     }
   },
-  created() {
+  mounted() {
     if (this.type === 'edit') {
       this.comment = this.propComment.message;
     }

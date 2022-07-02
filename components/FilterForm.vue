@@ -25,7 +25,6 @@
 
     methods: {
       handleInput(value, item) {
-        console.log(value, item)
         this.$emit('change', {
           property: item.property,
           value,

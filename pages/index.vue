@@ -135,7 +135,6 @@ export default {
       'setPostsPagination'
     ]),
     handlePaginationInput(page) {
-      console.log('Page>', page);
       this.setPostsPagination({page});
     },
     handleFilterChange({property, value}) {

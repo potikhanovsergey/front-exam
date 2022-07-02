@@ -81,7 +81,6 @@
               Оставить комментариий
             </v-btn>
             <comment-modal
-              v-if="commentModal.visible"
               :dialog="commentModal.visible" 
               :type="commentModal.type" 
               @new-comment="handleNewComment"
@@ -147,7 +146,6 @@ export default {
       }
     },
     async handleEditComment({ comment, id }) {
-      console.log(comment, id);
       const response = await this.editComment({ comment, id, post: this.$route.params.id });
       if (response.status === 200) {
         this.comments.find(c => c.id === id).message = comment;
@@ -155,8 +153,7 @@ export default {
       this.commentModal.visible = false;
     },
     async handleDeleteComment(id) {
-      const response = await this.deleteComment({id});
-      console.log(response);
+      await this.deleteComment({id});
       this.comments = this.comments.filter(comment => comment.id !== id);
     },
     openNewCommentModal() {
